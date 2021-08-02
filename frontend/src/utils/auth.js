@@ -1,4 +1,4 @@
-export const BASE_URL = "http://bukletika.nomoredomains.club";
+export const BASE_URL = "http://api.bukletika.nomoredomains.club";
 
 const handleResponse = res => res.ok ? res.json() : Promise.reject(`Ошибка ${res.status}`);
 
