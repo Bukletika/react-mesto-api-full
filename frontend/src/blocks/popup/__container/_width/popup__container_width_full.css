@@ -1,0 +1,9 @@
+.popup__container_width_full {
+  width: auto;
+  height: auto;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+  max-width: initial;
+  box-shadow: none;
+}

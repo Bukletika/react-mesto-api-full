@@ -1,0 +1,13 @@
+.auth-button {
+  font-size: 18px;
+  line-height: 22px;
+  color: #fff;
+  transition: .3s opacity ease;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-button:hover {
+  opacity: .6;
+}

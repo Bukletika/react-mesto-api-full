@@ -1,0 +1,11 @@
+.form__author {
+  padding: 0;
+  border: none;
+  margin: 45px 0 18px;
+}
+
+@media screen and (max-width: 768px) {
+  .form__author {
+    margin: 75px 0 15px;
+  }
+}

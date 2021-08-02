@@ -1,0 +1,10 @@
+.header__logo-link {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transition: .3s opacity ease;
+}
+
+.header__logo-link:hover {
+  opacity: .6;
+}

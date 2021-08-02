@@ -1,0 +1,9 @@
+.form__item_el_mail {
+  border-bottom: 2px solid #CCC;
+  margin-bottom: 30px;
+  color: #fff;
+}
+
+.form__item_el_mail:focus {
+  border-bottom: 2px solid #CCC;
+}

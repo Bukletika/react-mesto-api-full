@@ -1,0 +1,11 @@
+.form__author-img {
+  border: none;
+  margin: 45px 0 18px;
+  padding: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .form__author-img {
+    margin: 75px 0 15px;
+  }
+}
