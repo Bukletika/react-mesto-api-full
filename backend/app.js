@@ -1,8 +1,10 @@
 const express = require('express');
 const { celebrate, Joi } = require('celebrate');
-const corsMiddleware = require('./cors');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
+
 const mongoose = require('mongoose');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -30,8 +32,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 })
   .then(() => console.log('MongoDb has starded...')) /* eslint-disable-line no-console */
   .catch((e) => console.log(e)); /* eslint-disable-line no-console */
-
-app.use(corsMiddleware);
 
 app.use('/', express.json());
 
