@@ -1,0 +1,50 @@
+.form__item {
+  border: 0;
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
+  background-color: transparent;
+  font-family: inherit;
+  font-weight: 400;
+  color: #000;
+  line-height: 1.21;
+  font-size: 14px;
+  height: 27px;
+  margin: 0px 0 0;
+  padding: 0 0 10px;
+  border-radius: 0;
+}
+
+.form__item:focus {
+  outline: none;
+  border-bottom: 1px solid #749ae0;
+}
+
+.form__item::-webkit-input-placeholder {
+  font-size: 14px;
+  color: #bcbcc4;
+}
+
+.form__item::-moz-placeholder {
+  font-size: 14px;
+  color: #bcbcc4;
+}
+
+.form__item::-ms-input-placeholder {
+  font-size: 14px;
+  color: #bcbcc4;
+}
+
+.form__item::placeholder {
+  font-size: 14px;
+  color: #bcbcc4;
+}
+
+
+@media screen and (max-width: 768px) {
+  .form__item {
+    padding: 0 0 10px;
+  }
+}
+
+

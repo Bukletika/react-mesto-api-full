@@ -1,0 +1,9 @@
+.element__info {
+  background-color: #fff;
+  padding: 25px 18px 26px 21px;
+  box-sizing: border-box;
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto 22px;
+  grid-column-gap: 10px;
+}
