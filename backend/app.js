@@ -1,6 +1,6 @@
 const express = require('express');
 const { celebrate, Joi } = require('celebrate');
-let cors = require('cors');
+const cors = require('cors');
 
 const app = express();
 const mongoose = require('mongoose');
@@ -31,10 +31,13 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   .then(() => console.log('MongoDb has starded...')) /* eslint-disable-line no-console */
   .catch((e) => console.log(e)); /* eslint-disable-line no-console */
 
-app.use(cors());
+// app.use(cors());
+
 app.use('/', express.json());
 
 app.use(requestLogger); // Подключаем логгер запросов
+
+app.use(cors());
 
 // Роуты, не требующие авторизации
 app.post('/signin', celebrate({
