@@ -96,7 +96,7 @@ class Api {
 
 const api = new Api({
   url: "http://api.bukletika.nomoredomains.club",
-  // headers: { authorization: '528d5e73-a9a5-4772-abda-cd25c7cb79ab', 'Content-Type': 'application/json'},
+  headers: { authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTA4MGJmYmUxMDdjNjEyMDg2YjM5MjYiLCJpYXQiOjE2Mjc5MjE4NzUsImV4cCI6MTYyODUyNjY3NX0.5oZuFNtyPhvo7U492w_Q84eowgKXQaEv-iIo2sUtLQI', 'Content-Type': 'application/json'},
 });
 
 export default api;
