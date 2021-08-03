@@ -13,14 +13,16 @@ class Api {
 
   getInitialProfile() {
     return fetch(`${this._url}/users/me`, {
-      headers: this._headers
+      // headers: this._headers
+         headers: { authorization: `Bearer ${localStorage.jwt}`, 'Content-Type': 'application/json'},
     })
     .then(this._checkResponse);
   }
 
   getInitialCards() {
     return fetch(`${this._url}/cards`, {
-      headers: this._headers
+      // headers: this._headers
+      headers: { authorization: `Bearer ${localStorage.jwt}`, 'Content-Type': 'application/json'},
     })
     .then(this._checkResponse);
   }
@@ -47,6 +49,7 @@ class Api {
     return fetch(`${this._url}/cards`, {
         method: "POST",
         headers: this._headers,
+        // headers: { authorization: `Bearer ${localStorage.getItem('jwt')}`, 'Content-Type': 'application/json'},
         body: JSON.stringify(data),
     })
     .then(this._checkResponse);
@@ -55,20 +58,21 @@ class Api {
   deleteCard(id) {
     return fetch(`${this._url}/cards/${id}`, {
         method: "DELETE",
-        headers: this._headers,
+        // headers: this._headers,
+        headers: { authorization: `Bearer ${localStorage.jwt}`, 'Content-Type': 'application/json'},
     })
     .then(this._checkResponse);
   }
 
   changeLikeCardStatus(dataId, isLiked) {
     if(isLiked) {
-      return fetch(`${this._url}/cards/likes/${dataId}`, {
+      return fetch(`${this._url}/cards/${dataId}/likes`, {
         method: "PUT",
         headers: this._headers
       })
       .then(this._checkResponse);
     }else{
-      return fetch(`${this._url}/cards/likes/${dataId}`, {
+      return fetch(`${this._url}/cards/${dataId}/likes`, {
         method: "DELETE",
         headers: this._headers
       })
@@ -96,7 +100,8 @@ class Api {
 
 const api = new Api({
   url: "http://api.bukletika.nomoredomains.club",
-  // headers: { authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTA4MGJmYmUxMDdjNjEyMDg2YjM5MjYiLCJpYXQiOjE2Mjc5MjE4NzUsImV4cCI6MTYyODUyNjY3NX0.5oZuFNtyPhvo7U492w_Q84eowgKXQaEv-iIo2sUtLQI', 'Content-Type': 'application/json'},
+  // headers: { authorization: `Bearer ${localStorage.getItem('jwt')}`, 'Content-Type': 'application/json'},
+  headers: { authorization: `Bearer ${localStorage.getItem('jwt')}`, 'Content-Type': 'application/json'},
 });
 
 export default api;
