@@ -37,6 +37,8 @@ function App() {
     email: ''
   });
 
+  const [historyAuth, setHistoryAuth] = React.useState(false);
+
   const history = useHistory();
 
   function handleEditAvatarClick() {
@@ -78,7 +80,7 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked)
     .then((newCard) => {
       setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
@@ -127,13 +129,12 @@ function App() {
 
   function tokenCheck() {
     const jwt = localStorage.getItem('jwt');
-
     if(jwt) {
       auth.checkToken(jwt)
       .then((res) => {
-        if(res.data.email) {
+        if(res.email) {
           setUserData({
-            email: res.data.email
+            email: res.email
           });
           setLoggedIn(true);
           history.push('/main');
@@ -150,16 +151,18 @@ function App() {
   React.useEffect(() => {
     tokenCheck();
 
-    Promise.all([api.getInitialProfile(), api.getInitialCards()])
-    .then(([userData, cardsData]) => {
-      setCurrentUser(userData);
-      setCards(cardsData);
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`)
-    })
+    if(localStorage.getItem('jwt')) {
+      Promise.all([api.getInitialProfile(), api.getInitialCards()])
+      .then(([userData, cardsData]) => {
+        setCurrentUser(userData);
+        setCards(cardsData);
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`)
+      })
+    }
 
-  }, []);
+  }, [loggedIn]);
 
   const handleLogin = (password, email) => {
     auth.login(password, email)
@@ -169,12 +172,13 @@ function App() {
             email: email
           });
           localStorage.setItem('jwt', data.token);
+
           setLoggedIn(true);
           history.push("/main");
+
         }
       })
       .catch(err => {
-        console.log(err)
         setAuthInfoStatus(false);
         handleAuthInfoOpen();
       });
@@ -227,7 +231,7 @@ function App() {
             <Route path="/sign-in">
               <Login handleLogin={handleLogin} />
             </Route>
-            <Route exact path="/">
+            <Route exact path="*">
               {loggedIn ? (
                 <Redirect to="/main" />
               ) : (

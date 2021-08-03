@@ -93,7 +93,7 @@ module.exports.getUsers = (req, res, next) => {
 module.exports.getUserMe = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
-      res.status(200).send({ data: user });
+      res.status(200).send(user);
     })
     .catch(() => { next(new Error500('Ошибка на сервере')); });
 };
@@ -124,7 +124,7 @@ module.exports.updateUser = (req, res, next) => {
     },
   )
     .orFail(new Error('NotFound'))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.message === 'NotFound') {
         next(new Error404('Пользователь с указанным _id не найден'));
@@ -147,7 +147,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     },
   )
     .orFail(new Error('NotFound'))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.message === 'NotFound') {
         next(new Error404('Пользователь с указанным _id не найден'));

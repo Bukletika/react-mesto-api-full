@@ -8,7 +8,7 @@ const Error404 = require('../errors/Error404');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.status(200).send({ data: cards }))
+    .then((cards) => res.status(200).send(cards))
     .catch(() => {
       const baseError = new Error500('');
       next(baseError);
@@ -18,7 +18,7 @@ module.exports.getCards = (req, res, next) => {
 module.exports.postCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const validationError = new Error400('Переданы некорректные данные при создании карточки');
@@ -63,7 +63,7 @@ module.exports.likeCard = (req, res, next) => {
     { new: true },
   )
     .orFail(new Error400('Переданы некорректные данные'))
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.statusCode === 400) {
         next(err);
@@ -81,7 +81,7 @@ module.exports.dislikeCard = (req, res, next) => {
     { new: true },
   )
     .orFail(new Error400('Переданы некорректные данные'))
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.statusCode === 400) {
         next(err);
