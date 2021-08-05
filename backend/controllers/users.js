@@ -2,7 +2,8 @@ const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const jwt = require('jsonwebtoken'); // импортируем модуль jsonwebtoken
 const User = require('../models/user');
 
-const { JWT_SECRET } = require('../configs');
+const { NODE_ENV, JWT_SECRET } = process.env;
+// const { JWT_SECRET } = require('../configs');
 
 // Подключим классы ошибок
 const Error400 = require('../errors/Error400');
@@ -33,7 +34,7 @@ module.exports.login = (req, res, next) => {
             return next(new Error401('Неверный логин или пароль'));
           }
 
-          jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' }, (err, token) => {
+          jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key', { expiresIn: '7d' }, (err, token) => {
             if (err) {
               return next(new Error500('Ошибка на сервере'));
             }

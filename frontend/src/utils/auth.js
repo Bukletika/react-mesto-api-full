@@ -1,9 +1,11 @@
-export const BASE_URL = "http://api.bukletika.nomoredomains.club";
+import { optionsApi } from './utils';
 
+/* Проверка ответа сервера */
 const handleResponse = res => res.ok ? res.json() : Promise.reject(`Ошибка ${res.status}`);
 
+/* Регистрация */
 export const register = (password, email) => {
-  return fetch(`${BASE_URL}/signup`, {
+  return fetch(`${optionsApi.url}/signup`, {
     method: "POST",
     headers: {
       'Accept': 'application/json',
@@ -14,8 +16,9 @@ export const register = (password, email) => {
   .then(handleResponse)
 };
 
+/* Авторизация */
 export const login = (password, email) => {
-  return fetch(`${BASE_URL}/signin`, {
+  return fetch(`${optionsApi.url}/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,8 +28,9 @@ export const login = (password, email) => {
   .then(handleResponse)
 };
 
+/* Проверка токена */
 export const checkToken = (token) => {
-  return fetch(`${BASE_URL}/users/me`, {
+  return fetch(`${optionsApi.url}/users/me`, {
     method: "GET",
     headers: {
       'Accept': 'application/json',

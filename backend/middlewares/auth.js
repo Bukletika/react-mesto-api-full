@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../configs');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 // Подключим классы ошибок
 const Error401 = require('../errors/Error401');
@@ -16,7 +17,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, JWT_SECRET);
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key');
   } catch (err) {
     return next(new Error401('Необходима авторизация'));
   }
