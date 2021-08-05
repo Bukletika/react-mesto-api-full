@@ -37,26 +37,63 @@ function App() {
     email: ''
   });
 
-  const [historyAuth, setHistoryAuth] = React.useState(false);
-
   const history = useHistory();
 
+  /* Получить данные с сервера */
+  React.useEffect(() => {
+    if (loggedIn) {
+      Promise.all([api.getInitialProfile(), api.getInitialCards()])
+        .then(([userData, cardsData]) => {
+          setCurrentUser(userData);
+          setCards(cardsData);
+        })
+        .catch((err) => {
+          console.log(`Ошибка: ${err}`)
+        })
+    }
+  }, [loggedIn]);
+
+  /* Проверить токен на уникальность */
+  React.useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+    if(jwt) {
+      auth.checkToken(jwt)
+        .then((res) => {
+          if(res.email) {
+            setUserData({
+              email: res.email
+            });
+            setLoggedIn(true);
+            history.push('/main');
+          }
+        })
+        .catch((err) => {
+          console.log(`Ошибка удаления карточки: ${err}`)
+        })
+    }
+  }, [history])
+
+  /* Открыть окно редактирования аватара пользователя  */
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
 
+  /* Открыть окно редактирования профиля пользователя */
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
   }
 
+  /* Открыть окно добавления новой карточки */
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
 
+  /* Информационный попап */
   function handleAuthInfoOpen() {
     setIsInfoOpen(true);
   }
 
+  /* Закрыть все попапы */
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
@@ -65,10 +102,12 @@ function App() {
     setSelectedCard({});
   }
 
+  /* Открыть увеличенное фото */
   function handleCardClick(card) {
     setSelectedCard(card);
   }
 
+  /* Удалить карточку */
   function handleCardDelete(id) {
     api.deleteCard(id)
     .then(() => {
@@ -79,6 +118,7 @@ function App() {
     })
   }
 
+  /* Поставить/убрать лайк */
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked)
@@ -88,6 +128,7 @@ function App() {
     .catch((err) => console.log(err));
   }
 
+  /* Обновить профиль пользователя */
   function handleUpdateUser(data) {
     setIsSubmitting(true);
     api.editProfile(data)
@@ -101,6 +142,7 @@ function App() {
     })
   }
 
+  /* Обновить аватар */
   function handleUpdateAvatar(data) {
     setIsSubmitting(true);
     api.editProfileAvatar(data)
@@ -114,6 +156,7 @@ function App() {
     })
   }
 
+  /* Добавить новую карточку */
   function handleAddPlaceSubmit(data) {
     setIsSubmitting(true);
     api.addCard(data)
@@ -127,43 +170,7 @@ function App() {
     })
   }
 
-  function tokenCheck() {
-    const jwt = localStorage.getItem('jwt');
-    if(jwt) {
-      auth.checkToken(jwt)
-      .then((res) => {
-        if(res.email) {
-          setUserData({
-            email: res.email
-          });
-          setLoggedIn(true);
-          history.push('/main');
-        }
-      })
-      .catch((err) => {
-        console.log(`Ошибка удаления карточки: ${err}`)
-      })
-
-    }
-  }
-
-
-  React.useEffect(() => {
-    tokenCheck();
-
-    if(localStorage.getItem('jwt')) {
-      Promise.all([api.getInitialProfile(), api.getInitialCards()])
-      .then(([userData, cardsData]) => {
-        setCurrentUser(userData);
-        setCards(cardsData);
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`)
-      })
-    }
-
-  }, [loggedIn]);
-
+  /* Авторизоваться */
   const handleLogin = (password, email) => {
     auth.login(password, email)
       .then(data => {
@@ -171,9 +178,9 @@ function App() {
           setUserData({
             email: email
           });
+          setLoggedIn(true);
           localStorage.setItem('jwt', data.token);
 
-          setLoggedIn(true);
           history.push("/main");
 
         }
@@ -184,6 +191,7 @@ function App() {
       });
   }
 
+  /* Зарегистрироваться */
   const handleRegister = (password, email) => {
     auth.register(password, email)
       .then(data => {
@@ -195,12 +203,12 @@ function App() {
         history.push('/sign-in');
       })
       .catch(err => {
-        console.log(err);
         setAuthInfoStatus(false);
         handleAuthInfoOpen();
       });
   }
 
+  /* Выйти из аккаунта */
   const onSignOut = () => {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
@@ -231,7 +239,7 @@ function App() {
             <Route path="/sign-in">
               <Login handleLogin={handleLogin} />
             </Route>
-            <Route exact path="*">
+            <Route exact path="/">
               {loggedIn ? (
                 <Redirect to="/main" />
               ) : (
@@ -243,15 +251,11 @@ function App() {
         </div>
 
         <InfoTooltip onClose={closeAllPopups} isOpen={isInfoOpen} authInfoStatus={authInfoStatus} />
-
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isSubmitting={isSubmitting}/>
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isSubmitting={isSubmitting}/>
         <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} isSubmitting={isSubmitting}/>
+        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
-        <ImagePopup
-          card={selectedCard}
-          onClose={closeAllPopups}
-        />
       </CurrentUserContext.Provider>
   );
 }

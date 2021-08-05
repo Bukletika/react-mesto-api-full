@@ -1,13 +1,17 @@
 const express = require('express');
 const { celebrate, Joi } = require('celebrate');
+require('dotenv').config();
+
 const cors = require('cors');
 
 const app = express();
+
+app.use(cors());
 const mongoose = require('mongoose');
 
+const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { errors } = require('celebrate');
 const { linkTest } = require('./constatns');
 const auth = require('./middlewares/auth');
 
@@ -31,13 +35,16 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   .then(() => console.log('MongoDb has starded...')) /* eslint-disable-line no-console */
   .catch((e) => console.log(e)); /* eslint-disable-line no-console */
 
-// app.use(cors());
-
 app.use('/', express.json());
 
 app.use(requestLogger); // Подключаем логгер запросов
 
-app.use(cors());
+// Краш-тест сервера
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 // Роуты, не требующие авторизации
 app.post('/signin', celebrate({
