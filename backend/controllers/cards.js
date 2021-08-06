@@ -62,10 +62,10 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
-    .orFail(new Error400('Переданы некорректные данные'))
+    .orFail(new Error404('Переданы некорректные данные'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.statusCode === 400) {
+      if (err.statusCode === 404) {
         next(err);
       } else {
         const baseError = new Error500('');
@@ -80,10 +80,10 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .orFail(new Error400('Переданы некорректные данные'))
+    .orFail(new Error404('Переданы некорректные данные'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.statusCode === 400) {
+      if (err.statusCode === 404) {
         next(err);
       } else {
         const baseError = new Error500('');
