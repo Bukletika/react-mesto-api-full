@@ -6,7 +6,6 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(cors());
 const mongoose = require('mongoose');
 
 const rateLimit = require('express-rate-limit');
@@ -29,8 +28,6 @@ const {
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 
-app.use(helmet());
-
 // Ограничиваем количество запросов с одного IP-адреса в единицу времени
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -38,7 +35,9 @@ const limiter = rateLimit({
   message: 'С вашего IP поступило слишком много запросов. Попробуйте зайти позже',
 });
 
-app.use(limiter);
+app.use(cors());
+
+app.use(helmet());
 
 // Подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -53,6 +52,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use('/', express.json());
 
 app.use(requestLogger); // Подключаем логгер запросов
+
+app.use(limiter); // подключаем limiter
 
 // Краш-тест сервера
 app.get('/crash-test', () => {
